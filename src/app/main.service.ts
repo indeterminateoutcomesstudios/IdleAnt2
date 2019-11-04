@@ -35,6 +35,7 @@ export class MainService {
   unlockGroupEmiter: EventEmitter<number> = new EventEmitter<number>();
   efficiencyEmitter: EventEmitter<number> = new EventEmitter<number>();
   saveEmitter: EventEmitter<Date> = new EventEmitter<Date>();
+  selectedEmitter: EventEmitter<number> = new EventEmitter<number>();
 
   endInPipe: EndInPipe;
 
@@ -155,6 +156,8 @@ export class MainService {
   }
   save(autosave = false) {
     try {
+      if (autosave && !this.options.autoSave) return false;
+
       const save = this.getSave();
       if (!!save) {
         localStorage.setItem("save", save);

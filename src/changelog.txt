@@ -1,3 +1,16 @@
+13-04-2019
+- Added a flag to disable auto saving
+
+19-01-2019
+- Added AutoBuyers refund options
+
+24-12-2018
+- Fixed MaxBuy multi on save #30
+- Angular and clarity update, css fixes
+
+02-12-2018
+- Fixed Unit group selection action not updating costs
+
 30-10-2018
 - Fixed "+100% Bonus from Helpers" mastery description not updating
 

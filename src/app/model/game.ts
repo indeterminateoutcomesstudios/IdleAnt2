@@ -1,3 +1,4 @@
+import { solveEquation } from "ant-utils";
 import sample from "lodash-es/sample";
 import { MainService } from "../main.service";
 import { WarpAction } from "./actions/warp-action";
@@ -28,7 +29,6 @@ import { Wasps } from "./units/wasps";
 import { Workers } from "./units/workers";
 import { WorldBonus } from "./units/world-bonus";
 import { WorldMalus } from "./units/world-malus";
-import { Utility } from "./utility";
 import { World } from "./world";
 
 const STARTING_FOOD = new Decimal(100);
@@ -417,12 +417,9 @@ export class Game {
       //#endregion
 
       if (unit.a.lt(0) || unit.b.lt(0) || unit.c.lt(0) || d.lt(0)) {
-        const solution = Utility.solveEquation(
-          unit.a,
-          unit.b,
-          unit.c,
-          d
-        ).filter(s => s.gte(0));
+        const solution = solveEquation(unit.a, unit.b, unit.c, d).filter(s =>
+          s.gte(0)
+        );
 
         if (solution.length > 0) {
           const min = solution.reduce(
@@ -746,6 +743,11 @@ export class Game {
       this.currentWorld.level.gt(this.maxLevel.times(0.5))
     );
   }
+  refundAutoBuyers() {
+    const refExp = this.autoBuyManager.getTotalSkillSpent();
+    this.experience.quantity = this.experience.quantity.plus(refExp);
+    this.autoBuyManager.reset();
+  }
   //#region Unit Utils
   generateWorlds(userMin: Decimal = null, userMax: Decimal = null) {
     this.reloadMaxLevel();
@@ -852,6 +854,8 @@ export class Game {
       return false;
     }
   }
+  //#endregion
+
   //#region Price Utility
   private genTeamPrice(price: Decimal | number): Price[] {
     return [new Price(this.materials.science, new Decimal(price), 4)];
@@ -859,5 +863,4 @@ export class Game {
   private genTwinPrice(price: Decimal | number): Price[] {
     return [new Price(this.materials.science, new Decimal(price), 10)];
   }
-  //#endregion
 }
